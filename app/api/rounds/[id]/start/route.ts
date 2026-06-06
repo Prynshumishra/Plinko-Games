@@ -30,20 +30,25 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
   const { binIndex, path } = resolvePath(pegMap, rand, dropColumn)
   const payoutMultiplier = getMultiplier(binIndex)
 
-  await prisma.round.update({
-    where: { id: params.id },
-    data: {
-      status: 'STARTED',
-      clientSeed,
-      combinedSeed,
-      pegMapHash,
-      dropColumn,
-      betCents,
-      binIndex,
-      payoutMultiplier,
-      pathJson: path as object[],
-    },
-  })
+  try {
+    await prisma.round.update({
+      where: { id: params.id },
+      data: {
+        status: 'STARTED',
+        clientSeed,
+        combinedSeed,
+        pegMapHash,
+        dropColumn,
+        betCents,
+        binIndex,
+        payoutMultiplier,
+        pathJson: path as object[],
+      },
+    })
+  } catch (err) {
+    console.error('[start] prisma update failed:', err)
+    return NextResponse.json({ error: 'Database error' }, { status: 500 })
+  }
 
   return NextResponse.json({ binIndex, pathJson: path, pegMapHash, payoutMultiplier })
 }

@@ -59,6 +59,7 @@ export function useGameState() {
         body: JSON.stringify({ clientSeed, betCents, dropColumn }),
       })
       const data = await res.json()
+      if (!res.ok) throw new Error(data.error ?? 'Start failed')
       setPhase('ANIMATING')
 
       // Wait for animation to finish (12 rows × 210ms + 500ms buffer)
@@ -69,6 +70,7 @@ export function useGameState() {
       setPhase('REVEALING')
       const revRes = await fetch(`/api/rounds/${roundRef.current.id}/reveal`, { method: 'POST' })
       const revData = await revRes.json()
+      if (!revRes.ok) throw new Error(revData.error ?? 'Reveal failed')
 
       setResult({
         roundId: roundRef.current.id,
@@ -82,8 +84,8 @@ export function useGameState() {
         betCents,
       })
       setPhase('RESULT')
-    } catch {
-      setError('Drop failed. Retry.')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Drop failed. Retry.')
       setPhase('IDLE')
     }
   }, [])
