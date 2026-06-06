@@ -1,0 +1,22 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+.docs
+docs/
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build artifacts
+dist/
+
+# Prisma
+prisma/migrations/
+
+# Misc
+.DS_Store
+*.pem
