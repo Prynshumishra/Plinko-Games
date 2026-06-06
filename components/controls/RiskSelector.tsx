@@ -1,5 +1,6 @@
 'use client'
-import type { Risk } from '@/lib/engine/payout'
+
+export type Risk = 'low' | 'medium' | 'high'
 
 const RISKS: { value: Risk; label: string; color: string }[] = [
   { value: 'low',    label: 'Low',  color: 'text-green-400' },
